@@ -8,8 +8,12 @@ A simple Clojure wrapper for the ROME feed parsing and manipulation library. Rig
     ;; returns a SyndFeedImpl object
     (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 
-    ;; list-entries returns a vector of maps representing each entry
-    (def title (:title (first (list-entries feed))))
+    ;; get-entries returns a vector of SyndEntryImpl
+    (def title (get-entry-title (first (get-entries feed))))
+
+    ;; entry2map turns SyndEntryImpl into a map with the most
+    ;; generally useful fields
+    (def same-title (:title (entry2map (first (get-entries feed)))))
     ;; contains :contents :authors :title :link :description :categories :updated-date :published-date
     ;; the dates are in clj-time format
 

@@ -10,7 +10,10 @@
 (deftest test-feed-from-string
   (is (= "rss_2.0" (.getFeedType (build-feed (slurp "test/clj_rome/test/feeds/lacuisinededoria.xml"))))))
 
-(def entry (first (list-entries feed)))
+(def entry (first (get-entries feed)))
 
 (deftest test-entry
-  (is "Canard" (first (:categories entry))))
+  (is "Canard" (first (get-entry-categories entry))))
+
+(deftest test-map-entry
+  (is "Canard" (first (:categories (entry2map entry)))))
