@@ -51,6 +51,10 @@
   [entry]
   (.getLink entry))
 
+(defn get-entry-uri
+  [entry]
+  (.getUri entry))
+
 (defn get-entry-authors
   [entry]
   (into [] (.getAuthors entry)))
@@ -78,6 +82,7 @@
    :authors (get-entry-authors entry)
    :title (get-entry-title entry)
    :link (get-entry-link entry)
+   :uri (get-entry-uri entry)
    :description (get-entry-description entry)
    :categories (get-entry-categories entry)
    :updated-date (get-entry-updated entry)
