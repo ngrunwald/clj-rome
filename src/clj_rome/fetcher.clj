@@ -4,7 +4,7 @@
            (java.net URL))
   (:require [clojure.contrib.string]))
 
-(def *fetcher*)
+(def ^:dynamic *fetcher*)
 
 
 (defn build-url-fetcher
