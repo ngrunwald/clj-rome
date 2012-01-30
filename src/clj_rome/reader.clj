@@ -20,8 +20,14 @@
     [str]
     (cond
       (re-find #"^https?://" str) (XmlReader. (URL. str))
-      (re-find #"^\s*<" str) (StringReader. str) 
+      (re-find #"^\s*<" str) (StringReader. str)
       :else (FileReader. str))))
+
+(extend-type java.io.Reader
+  Feedable
+  (make-reader
+    [reader]
+    reader))
 
 (defn build-feed
   "builds a SyndFeedImpl from an url, a filepath or a XML string"

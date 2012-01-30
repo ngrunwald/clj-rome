@@ -6,7 +6,6 @@
 
 (def *fetcher*)
 
-
 (defn build-url-fetcher
   "builds an HttpURLFeedFetcher with or without caching."
   (
