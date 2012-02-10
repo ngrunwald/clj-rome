@@ -84,7 +84,7 @@
 (defn entry2map
   "transforms a SyndEntryImpl into a Clojure map"
   [entry]
-  {:contents (get-entry-full-content entry)
+  {:contents (get-entry-contents entry)
    :authors (get-entry-authors entry)
    :title (get-entry-title entry)
    :link (get-entry-link entry)
