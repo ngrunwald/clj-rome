@@ -45,13 +45,13 @@
   [entry]
   (str/join "\n" (get-entry-contents entry)))
 
-(defn get-entry-authors
-  [entry]
-  (into [] (.getAuthors entry)))
-
 (defn get-entry-title
   [entry]
   (.getTitle entry))
+
+(defn get-entry-links
+  [entry]
+  (into [] (map bean (.getLinks entry))))
 
 (defn get-entry-link
   [entry]
@@ -63,11 +63,11 @@
 
 (defn get-entry-authors
   [entry]
-  (into [] (.getAuthors entry)))
+  (into [] (map bean (.getAuthors entry))))
 
 (defn get-entry-description
   [entry]
-  (if-let [desc (.getDescription entry)] {:value (.getValue desc) :type (.getType desc)} {:value nil :type nil}))
+  (if-let [desc (.getDescription entry)] {:value (.getValue desc) :type (.getType desc)}))
 
 (defn get-entry-categories
   [entry]
@@ -88,6 +88,7 @@
    :authors (get-entry-authors entry)
    :title (get-entry-title entry)
    :link (get-entry-link entry)
+   :links (get-entry-links entry)
    :uri (get-entry-uri entry)
    :description (get-entry-description entry)
    :categories (get-entry-categories entry)
