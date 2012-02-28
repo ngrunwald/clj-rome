@@ -1,16 +1,36 @@
 (ns clj-rome.fetcher
-  (:import (com.sun.syndication.fetcher.impl HttpURLFeedFetcher)
+  (:import (com.sun.syndication.fetcher.impl HttpURLFeedFetcher DiskFeedInfoCache
+                                             LinkedHashMapFeedInfoCache HashMapFeedInfoCache)
            (com.sun.syndication.fetcher FetcherListener)
-           (java.net URL)))
+           (java.net URL))
+  (:use [clojure.java.io :as io]))
 
 (def ^{:dynamic true} *fetcher*)
 
+(defn create-dir
+  [path]
+  (let [f (io/file path)]
+    (.mkdirs f)
+    (str f)))
+
+(defn build-feed-cache
+  "builds a cache instance based on type:
+     - :hash-map
+     - :linked-hash-map
+     - :disk path"
+  [type & args]
+  (case type
+    :hash-map (HashMapFeedInfoCache.)
+    :linked-hash-map (LinkedHashMapFeedInfoCache.)
+    :disk (DiskFeedInfoCache. (create-dir (first args)))))
+
 (defn build-url-fetcher
-  "builds an HttpURLFeedFetcher with or without caching."
+  "builds an HttpURLFeedFetcher. Can take a cache type param
+  (see build-feed-cache)"
   ([]
      (HttpURLFeedFetcher.))
-  ([cache]
-     (HttpURLFeedFetcher. cache)))
+  ([& args]
+     (HttpURLFeedFetcher. (apply build-feed-cache args))))
 
 (defn retrieve-feed
   "retrieves a feed from a fetcher or the default one.
