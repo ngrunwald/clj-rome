@@ -5,7 +5,7 @@
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clj-time.format :as fmt]
-            [clojure.contrib.string :as str]))
+            [clojure.string :as str]))
 
 (defprotocol Feedable
   (make-reader [arg]))
