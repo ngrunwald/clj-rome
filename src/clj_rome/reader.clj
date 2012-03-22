@@ -81,6 +81,10 @@
   [entry]
   (if-let [date (.getPublishedDate entry)] (coerce/from-date date) nil ))
 
+(defn get-enclosures
+  [entry]
+  (into [] (map (fn [e] {:url (.getUrl e) :type (.getType e) :length (.getLength e)}) (.getEnclosures entry))))
+
 (defn entry2map
   "transforms a SyndEntryImpl into a Clojure map"
   [entry]
@@ -93,7 +97,8 @@
    :description (get-entry-description entry)
    :categories (get-entry-categories entry)
    :updated-date (get-entry-updated entry)
-   :published-date (get-entry-published entry)})
+   :published-date (get-entry-published entry)
+   :enclosures (get-enclosures entry)})
 
 (defn get-entries
   "returns a vector of SyndEntryImpl from a SyndFeedImpl"
