@@ -2,10 +2,7 @@
   (:import (java.net URL)
            (com.sun.syndication.io SyndFeedInput XmlReader)
            (java.io StringReader FileReader))
-  (:require [clj-time.coerce :as coerce]
-            [clj-time.core :as time]
-            [clj-time.format :as fmt]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [gavagai.core :as gav]))
 
 (defprotocol Feedable
