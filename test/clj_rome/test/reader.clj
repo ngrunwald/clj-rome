@@ -5,15 +5,13 @@
 (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 
 (deftest test-feed-from-path
-  (is (= "rss_2.0" (.getFeedType feed))))
+  (is (= "rss_2.0" (:feed-type feed))))
 
 (deftest test-feed-from-string
-  (is (= "rss_2.0" (.getFeedType (build-feed (slurp "test/clj_rome/test/feeds/lacuisinededoria.xml"))))))
+  (is (= "rss_2.0" (:feed-type (build-feed (slurp "test/clj_rome/test/feeds/lacuisinededoria.xml"))))))
 
-(def entry (first (get-entries feed)))
+(def entry (first (:entries feed)))
 
 (deftest test-entry
-  (is "Canard" (first (get-entry-categories entry))))
+  (is "Canard" (-> entry (:categories) (first) (:name))))
 
-(deftest test-map-entry
-  (is "Canard" (first (:categories (entry2map entry)))))

@@ -5,7 +5,8 @@
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clj-time.format :as fmt]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [gavagai.core :as gav]))
 
 (defprotocol Feedable
   (make-reader [arg]))
@@ -29,78 +30,23 @@
     [reader]
     reader))
 
+(gav/register-converters
+ ["com.sun.syndication.feed.synd.SyndFeedImpl" :exclude [:class] :add {:original identity}]
+ ["com.sun.syndication.feed.synd.SyndContentImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.synd.SyndImageImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.module.DCModuleImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.module.DCSubjectImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.module.SyModuleImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.synd.SyndEntryImpl" :exclude [:class :source]]
+ ["com.sun.syndication.feed.synd.SyndLinkImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.synd.SyndPersonImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.synd.SyndEnclosureImpl" :exclude [:class]]
+ ["com.sun.syndication.feed.synd.SyndCategoryImpl" :exclude [:class]])
+
 (defn build-feed
   "builds a SyndFeedImpl from an url, a filepath or a XML string"
   [arg]
   (let
       [reader (make-reader arg)
        feed (.build (SyndFeedInput.) reader)]
-    feed))
-
-(defn get-entry-contents
-  [entry]
-  (into [] (map (fn [c] {:value (.getValue c), :type (.getType c)}) (.getContents entry))))
-
-(defn get-entry-full-content
-  [entry]
-  (str/join "\n" (get-entry-contents entry)))
-
-(defn get-entry-title
-  [entry]
-  (.getTitle entry))
-
-(defn get-entry-links
-  [entry]
-  (into [] (map bean (.getLinks entry))))
-
-(defn get-entry-link
-  [entry]
-  (.getLink entry))
-
-(defn get-entry-uri
-  [entry]
-  (.getUri entry))
-
-(defn get-entry-authors
-  [entry]
-  (into [] (map bean (.getAuthors entry))))
-
-(defn get-entry-description
-  [entry]
-  (if-let [desc (.getDescription entry)] {:value (.getValue desc) :type (.getType desc)}))
-
-(defn get-entry-categories
-  [entry]
-  (into [] (map (memfn getName) (.getCategories entry))))
-
-(defn get-entry-updated
-  [entry]
-  (if-let [date (.getUpdatedDate entry)] (coerce/from-date date) nil))
-
-(defn get-entry-published
-  [entry]
-  (if-let [date (.getPublishedDate entry)] (coerce/from-date date) nil ))
-
-(defn get-enclosures
-  [entry]
-  (into [] (map (fn [e] {:url (.getUrl e) :type (.getType e) :length (.getLength e)}) (.getEnclosures entry))))
-
-(defn entry2map
-  "transforms a SyndEntryImpl into a Clojure map"
-  [entry]
-  {:contents (get-entry-contents entry)
-   :authors (get-entry-authors entry)
-   :title (get-entry-title entry)
-   :link (get-entry-link entry)
-   :links (get-entry-links entry)
-   :uri (get-entry-uri entry)
-   :description (get-entry-description entry)
-   :categories (get-entry-categories entry)
-   :updated-date (get-entry-updated entry)
-   :published-date (get-entry-published entry)
-   :enclosures (get-enclosures entry)})
-
-(defn get-entries
-  "returns a vector of SyndEntryImpl from a SyndFeedImpl"
-  [feed]
-  (into [] (.getEntries feed)))
+    (gav/translate feed)))

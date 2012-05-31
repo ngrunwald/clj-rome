@@ -20,13 +20,7 @@ A simple Clojure wrapper for the ROME feed parsing and manipulation library. Rig
         (retrieve-feed "http://www.atomenabled.org/atom.xml")))
 
     ;; get-entries returns a vector of SyndEntryImpl
-    (def title (get-entry-title (first (get-entries feed))))
-
-    ;; entry2map turns SyndEntryImpl into a map with the most
-    ;; generally useful fields
-    (def same-title (:title (entry2map (first (get-entries feed)))))
-    ;; contains :contents :authors :title :link :links :description :categories :updated-date :published-date
-    ;; the dates are in clj-time format
+    (def title (:title (first (:entries feed))))
 ```
 
 For more documentation on ROME, see the [ROME javadocs](http://www.jarvana.com/jarvana/view/net/java/dev/rome/rome/1.0.0/rome-1.0.0-javadoc.jar!/index.html).
