@@ -46,4 +46,4 @@
   (let
       [reader (make-reader arg)
        feed (.build (SyndFeedInput.) reader)]
-    (gav/translate feed {:nspace *ns*})))
+    (gav/translate feed {:nspace (find-ns 'clj-rome.reader)})))
