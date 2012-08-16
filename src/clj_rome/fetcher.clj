@@ -3,8 +3,9 @@
                                              LinkedHashMapFeedInfoCache HashMapFeedInfoCache)
            (com.sun.syndication.fetcher FetcherListener)
            (java.net URL))
-  (:use [clojure.java.io :as io]
-        [gavagai.core :as gav]))
+  (:require [clojure.java.io :as io]
+            [gavagai.core :as gav]
+            [clj-rome.reader :as r]))
 
 (def ^{:dynamic true} *fetcher*)
 
@@ -34,10 +35,9 @@
      (HttpURLFeedFetcher. (apply build-feed-cache args))))
 
 (defn retrieve-feed
-  "retrieves a feed from a fetcher or the default one.
-   Returns a SyndFeedImpl object"
+  "retrieves a feed from a fetcher or the default one."
   ([fetcher url]
-     (gav/translate (.retrieveFeed fetcher (URL. (str url)))))
+     (gav/translate (.retrieveFeed fetcher (URL. (str url))) {:nspace r/local-ns}))
   ([url]
      (retrieve-feed *fetcher* url)))
 

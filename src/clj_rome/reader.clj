@@ -5,6 +5,8 @@
   (:require [clojure.string :as str]
             [gavagai.core :as gav]))
 
+(def local-ns (find-ns 'clj-rome.reader))
+
 (defprotocol Feedable
   (make-reader [arg]))
 
@@ -46,4 +48,4 @@
   (let
       [reader (make-reader arg)
        feed (.build (SyndFeedInput.) reader)]
-    (gav/translate feed {:nspace (find-ns 'clj-rome.reader)})))
+    (gav/translate feed {:nspace local-ns})))
