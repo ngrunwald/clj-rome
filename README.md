@@ -2,6 +2,15 @@
 
  A simple Clojure wrapper for the [ROME](http://rometools.org/) feed parsing and manipulation library. Right now only the wrapper for feed parsing and fetching are implemented.
 
+## Installation
+
+`clj-rome` is available as a Maven artifact from
+[Clojars](http://clojars.org/clj-rome):
+
+```clojure
+[clj-rome "0.3.0"]
+```
+
 ## Usage
 
 ```clojure
@@ -14,11 +23,13 @@
 
 ```clojure
 (keys feed)
-
-=> (:foreign-markup :published-date :entries :preserving-wire-feed? :copyright :link :contributors :author :supported-feed-types :feed-type :image :language :title :uri :categories :original :modules :interface :links :encoding :authors :title-ex :description :description-ex)
+=> (:foreign-markup :published-date :entries :preserving-wire-feed?
+    :copyright :link :contributors :author :supported-feed-types
+    :feed-type :image :language :title :uri :categories :original :modules
+    :interface :links :encoding :authors :title-ex :description
+    :description-ex)
 
 (first (:entries feed))
-
 => {:enclosures [],
     :foreign-markup [],
     :wire-entry nil,
@@ -72,16 +83,23 @@
     :description {:type "text/html",
                   :interface com.sun.syndication.feed.synd.SyndContent,
                   :mode nil,
-                  :value "<p style=\"text-align: center;\"> <span style=\"font-family: comic sans ms,sans-serif; font-size: 12pt;\">Une recette réalisée par mon mari qui aime de plus en plus la cuisine et me \"voler\" la place derrière les fourneaux !</span></p>"},
+                  :value "<p style=\"text-align: center;\"> <span
+                  style=\"font-family: comic sans ms,sans-serif;
+                  font-size: 12pt;\">Une recette réalisée par mon mari
+                  qui aime de plus en plus la cuisine et me \"voler\"
+                  la place derrière les fourneaux !</span></p>"},
     :contents []}
 ```
 
-You can use the ROME fetcher to retrieve a feed from the web with caching and conditional GET handled for you:
-
+ You can use the ROME fetcher to retrieve a feed from the web with caching and conditional GET handled for you:
 ```clojure
     ;; creating a caching fetcher
+    ;; type can be any of :hash-map, :linked-hash-map, :disk
     (use 'clj-rome.fetcher)
     (def fetcher (build-url-fetcher :disk "/tmp/cache"))
+
+    ;; you can attach a listener to your fetcher
+    (add-listener fetcher (fn [event] (println event)))
 
     ;; using the fetcher with a cache to fetch a feed
     (def feed
@@ -89,7 +107,7 @@ You can use the ROME fetcher to retrieve a feed from the web with caching and co
         (retrieve-feed "http://www.atomenabled.org/atom.xml")))
 ```
 
-For more documentation on ROME, see the [ROME javadocs](http://www.jarvana.com/jarvana/view/net/java/dev/rome/rome/1.0.0/rome-1.0.0-javadoc.jar!/index.html).
+ For more documentation on ROME, see the [ROME javadocs](http://www.jarvana.com/jarvana/view/net/java/dev/rome/rome/1.0.0/rome-1.0.0-javadoc.jar!/index.html).
 
 ## License
 
