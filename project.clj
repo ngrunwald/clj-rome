@@ -3,4 +3,4 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [net.java.dev.rome/rome-fetcher "1.0.0"]
-                 [gavagai "0.1.0-SNAPSHOT"]])
+                 [gavagai "0.1.0"]])
