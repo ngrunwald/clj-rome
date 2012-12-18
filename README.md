@@ -18,7 +18,7 @@
     (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 ```
 
- The return value of `build-feed` is a lazy structure (see [lazymap](https://github.com/ngrunwald/lazymap)) recursively translated from Java to Clojure with [gavagai](https://github.com/ngrunwald/gavagai). It has keys corresponding to the Java getter methods. If you prefer plain grredy maps, you can use build-feed with an option map:
+ The return value of `build-feed` is a lazy structure (see [lazymap](https://github.com/ngrunwald/lazymap)) recursively translated from Java to Clojure with [gavagai](https://github.com/ngrunwald/gavagai). It has keys corresponding to the Java getter methods. If you prefer plain greedy maps, you can use build-feed with an option map:
 ```clojure
     (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml" {:lazy? false}))
 ```
