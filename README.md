@@ -7,7 +7,7 @@
 `clj-rome` is available as a Maven artifact from
 [Clojars](http://clojars.org/clj-rome):
 ```clojure
-[clj-rome "0.3.0"]
+[clj-rome "0.3.1"]
 ```
 
 ## Usage
