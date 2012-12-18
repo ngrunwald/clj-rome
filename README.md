@@ -6,7 +6,6 @@
 
 `clj-rome` is available as a Maven artifact from
 [Clojars](http://clojars.org/clj-rome):
-
 ```clojure
 [clj-rome "0.3.0"]
 ```
@@ -19,8 +18,12 @@
     (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 ```
 
- The return value of `build-feed` is a lazy structure recursively translated from Java to Clojure with [gavagai](https://github.com/ngrunwald/gavagai). It has keys corresponding to the Java getter methods.
+ The return value of `build-feed` is a lazy structure (see [lazymap](https://github.com/ngrunwald/lazymap)) recursively translated from Java to Clojure with [gavagai](https://github.com/ngrunwald/gavagai). It has keys corresponding to the Java getter methods. If you prefer plain grredy maps, you can use build-feed with an option map:
+```clojure
+    (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml" {:lazy? false}))
+```
 
+Here are some exemples to give you an idea of what is in the feed and each entry:
 ```clojure
 (keys feed)
 => (:foreign-markup :published-date :entries :preserving-wire-feed?

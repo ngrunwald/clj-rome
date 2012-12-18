@@ -44,8 +44,10 @@
 
 (defn build-feed
   "builds a SyndFeedImpl from an url, a filepath or a XML string"
-  [arg]
-  (let
-      [reader (make-reader arg)
-       feed (.build (SyndFeedInput.) reader)]
-    (gav/translate feed {:nspace local-ns})))
+  ([arg {:keys [lazy?] :as opts}]
+     (let
+         [reader (make-reader arg)
+          feed (.build (SyndFeedInput.) reader)]
+       (gav/translate feed (assoc opts :nspace local-ns))))
+  ([arg]
+     (build-feed arg {})))

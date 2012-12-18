@@ -4,6 +4,11 @@
 
 (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 
+(deftest lazyness
+  (is (instance? lazymap.core.LazyPersistentMap feed))
+  (let [f2 (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml" {:lazy? false})]
+    (is (instance? clojure.lang.PersistentHashMap f2))))
+
 (deftest test-feed-from-path
   (is (= "rss_2.0" (:feed-type feed))))
 
