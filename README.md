@@ -24,10 +24,9 @@
 ```
 
 There is also a `raw?` option to get the java SyndFeed object, if you need to modify it.
-
-```
+```clojure
 ;; this is equivalent to build-feed with no option
-(convert-feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
+(convert-feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml" {:raw? true}))
 ```
 
 Here are some exemples to give you an idea of what is in the feed and each entry:
