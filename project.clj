@@ -1,4 +1,4 @@
-(defproject clj-rome "0.4.0-SNAPSHOT"
+(defproject clj-rome "0.4.0"
   :description "A Clojure wrapper for the ROME feed parsing and manipulation library"
   :url "https://github.com/ngrunwald/clj-rome"
   :license {:name "Eclipse Public License"
