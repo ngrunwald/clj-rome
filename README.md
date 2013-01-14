@@ -7,20 +7,27 @@
 `clj-rome` is available as a Maven artifact from
 [Clojars](http://clojars.org/clj-rome):
 ```clojure
-[clj-rome "0.3.1"]
+[clj-rome "0.4.0"]
 ```
 
 ## Usage
 
 ```clojure
-    ;; build-feed will automaticaly dispatch on an xml string, a filepath or an url
-    (use 'clj-rome.reader)
-    (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
+;; build-feed will automaticaly dispatch on an xml string, a filepath, a reader or an url
+(use 'clj-rome.reader)
+(def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 ```
 
  The return value of `build-feed` is a lazy structure (see [lazymap](https://github.com/ngrunwald/lazymap)) recursively translated from Java to Clojure with [gavagai](https://github.com/ngrunwald/gavagai). It has keys corresponding to the Java getter methods. If you prefer plain greedy maps, you can use build-feed with an option map:
 ```clojure
-    (def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml" {:lazy? false}))
+(def feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml" {:lazy? false}))
+```
+
+There is also a `raw?` option to get the java SyndFeed object, if you need to modify it.
+
+```
+;; this is equivalent to build-feed with no option
+(convert-feed (build-feed "test/clj_rome/test/feeds/lacuisinededoria.xml"))
 ```
 
 Here are some exemples to give you an idea of what is in the feed and each entry:
@@ -28,7 +35,7 @@ Here are some exemples to give you an idea of what is in the feed and each entry
 (keys feed)
 => (:foreign-markup :published-date :entries :preserving-wire-feed?
     :copyright :link :contributors :author :supported-feed-types
-    :feed-type :image :language :title :uri :categories :original :modules
+    :feed-type :image :language :title :uri :categories :modules
     :interface :links :encoding :authors :title-ex :description
     :description-ex)
 
@@ -94,26 +101,12 @@ Here are some exemples to give you an idea of what is in the feed and each entry
     :contents []}
 ```
 
- You can use the ROME fetcher to retrieve a feed from the web with caching and conditional GET handled for you:
-```clojure
-    ;; creating a caching fetcher
-    ;; type can be any of :hash-map, :linked-hash-map, :disk
-    (use 'clj-rome.fetcher)
-    (def fetcher (build-url-fetcher :disk "/tmp/cache"))
-
-    ;; you can attach a listener to your fetcher
-    (add-listener fetcher (fn [event] (println event)))
-
-    ;; using the fetcher with a cache to fetch a feed
-    (def feed
-      (with-fetcher fetcher
-        (retrieve-feed "http://www.atomenabled.org/atom.xml")))
-```
+If you need to use the wrapper for the ROME fetcher, it is packaged separately as `clj-rome-fetcher`. You can find it on [Github](https://github.com/ngrunwald/clj-rome-fetcher).
 
  For more documentation on ROME, see the [ROME javadocs](http://www.jarvana.com/jarvana/view/net/java/dev/rome/rome/1.0.0/rome-1.0.0-javadoc.jar!/index.html).
 
 ## License
 
-Copyright (C) 2012 Nils Grunwald
+Copyright (C) 2012, 2013 Nils Grunwald
 
 Distributed under the Eclipse Public License, the same as Clojure.

@@ -1,11 +1,9 @@
 (ns clj-rome.reader
   (:import (java.net URL)
            (com.sun.syndication.io SyndFeedInput XmlReader)
-           (java.io StringReader FileReader))
+           (java.io StringReader FileReader Reader))
   (:require [clojure.string :as str]
             [gavagai.core :as gav]))
-
-(def local-ns (find-ns 'clj-rome.reader))
 
 (defprotocol Feedable
   (make-reader [arg]))
@@ -25,29 +23,38 @@
 
 (extend-type java.io.Reader
   Feedable
-  (make-reader
-    [reader]
-    reader))
+  (make-reader [reader] reader))
 
-(gav/register-converters
- ["com.sun.syndication.feed.synd.SyndFeedImpl" :exclude [:class] :add {:original identity}]
- ["com.sun.syndication.feed.synd.SyndContentImpl" :exclude [:class]]
- ["com.sun.syndication.feed.synd.SyndImageImpl" :exclude [:class]]
- ["com.sun.syndication.feed.module.DCModuleImpl" :exclude [:class]]
- ["com.sun.syndication.feed.module.DCSubjectImpl" :exclude [:class]]
- ["com.sun.syndication.feed.module.SyModuleImpl" :exclude [:class]]
- ["com.sun.syndication.feed.synd.SyndEntryImpl" :exclude [:class :source]]
- ["com.sun.syndication.feed.synd.SyndLinkImpl" :exclude [:class]]
- ["com.sun.syndication.feed.synd.SyndPersonImpl" :exclude [:class]]
- ["com.sun.syndication.feed.synd.SyndEnclosureImpl" :exclude [:class]]
- ["com.sun.syndication.feed.synd.SyndCategoryImpl" :exclude [:class]])
+(def feed-translator
+  (gav/register-converters
+   {:exclude [:class]}
+   [["com.sun.syndication.feed.synd.SyndFeedImpl"]
+    ["com.sun.syndication.feed.synd.SyndContentImpl"]
+    ["com.sun.syndication.feed.synd.SyndImageImpl"]
+    ["com.sun.syndication.feed.module.DCModuleImpl"]
+    ["com.sun.syndication.feed.module.DCSubjectImpl"]
+    ["com.sun.syndication.feed.module.SyModuleImpl"]
+    ["com.sun.syndication.feed.synd.SyndEntryImpl"]
+    ["com.sun.syndication.feed.synd.SyndLinkImpl"]
+    ["com.sun.syndication.feed.synd.SyndPersonImpl"]
+    ["com.sun.syndication.feed.synd.SyndEnclosureImpl"]
+    ["com.sun.syndication.feed.synd.SyndCategoryImpl"]]))
+
+(def convert-feed
+  "converts an object from ROME to its Clojure immutable translation"
+  (partial gav/translate feed-translator))
 
 (defn build-feed
-  "builds a SyndFeedImpl from an url, a filepath or a XML string"
-  ([arg {:keys [lazy?] :as opts}]
+  "builds a SyndFeedImpl from an Url, a filepath, Reader or a XML string
+   It takes 2 options
+     :lazy? (set to false to get a realized map)
+     :raw?  (set to true to get the raw java SyndFeed)"
+  ([arg {:keys [lazy? raw?] :as opts}]
      (let
-         [reader (make-reader arg)
+         [^Reader reader (make-reader arg)
           feed (.build (SyndFeedInput.) reader)]
-       (gav/translate feed (assoc opts :nspace local-ns))))
+       (if raw?
+         feed
+         (convert-feed feed opts))))
   ([arg]
      (build-feed arg {})))
